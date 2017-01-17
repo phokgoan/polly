@@ -1,0 +1,1 @@
+../.toolchain/android-ndk-r13b-api-21-armeabi-v7a.cmake
