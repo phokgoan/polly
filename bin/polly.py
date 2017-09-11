@@ -68,6 +68,11 @@ parser.add_argument(
     help="Project home directory (directory with CMakeLists.txt)"
 )
 
+parser.add_argument(
+    '--output',
+    help="Project build directory (i.e., cmake -B)"
+)
+
 parser.add_argument('--test', action='store_true', help="Run ctest after build")
 parser.add_argument('--test-xml', help="Save ctest output to xml")
 
@@ -116,6 +121,11 @@ parser.add_argument(
     '--framework-device',
     action='store_true',
     help="Create framework for device (exclude simulator architectures)"
+)
+parser.add_argument(
+    '--framework-lib',
+    default='*',
+    help="Regular expression for the source library used for --framework"
 )
 parser.add_argument(
     '--strip', action='store_true', help="Run strip/install cmake targets"
@@ -186,6 +196,21 @@ parser.add_argument(
     help='Timeout for CTest'
 )
 
+parser.add_argument(
+    '--cmake',
+    help="CMake binary (cmake or cmake3)"
+)
+
+parser.add_argument(
+    '--cpack',
+    help="CPack binary (cpack or cpack3)"
+)
+
+parser.add_argument(
+    '--ctest',
+    help="CTest binary (ctest or ctest3)"
+)
+
 args = parser.parse_args()
 
 polly_toolchain = detail.toolchain_name.get(args.toolchain)
@@ -202,7 +227,7 @@ else:
   build_tag = polly_toolchain
 
 """Tune environment"""
-if toolchain_entry.name == 'mingw':
+if toolchain_entry.name == 'mingw' or toolchain_entry.name == 'mingw-c11':
   mingw_path = os.getenv("MINGW_PATH")
   detail.verify_mingw_path.verify(mingw_path)
   os.environ['PATH'] = "{};{}".format(mingw_path, os.getenv('PATH'))
@@ -235,12 +260,19 @@ if toolchain_entry.osx_version:
     print("Set environment DEVELOPER_DIR to {}".format(osx_dev_root))
     os.environ['DEVELOPER_DIR'] = osx_dev_root
 
-cdir = os.getcwd()
-
 toolchain_path = os.path.join(polly_root, "{}.cmake".format(polly_toolchain))
 if not os.path.exists(toolchain_path):
   sys.exit("Toolchain file not found: {}".format(toolchain_path))
 toolchain_option = "-DCMAKE_TOOLCHAIN_FILE={}".format(toolchain_path)
+
+if args.output:
+  if not os.path.isdir(args.output):
+    sys.exit("Specified build directory does not exists: {}".format(args.output))
+  if not os.access(args.output, os.W_OK):
+    sys.exit("Specified build directory is not writeable: {}".format(args.output))
+  cdir = args.output
+else:
+  cdir = os.getcwd()
 
 build_dir = os.path.join(cdir, '_builds', build_tag)
 print("Build dir: {}".format(build_dir))
@@ -288,21 +320,32 @@ if args.verbose:
 polly_temp_dir = os.path.join(build_dir, '_3rdParty', 'polly')
 if not os.path.exists(polly_temp_dir):
   os.makedirs(polly_temp_dir)
-logging = detail.logging.Logging(cdir, args.verbosity, args.discard, args.tail)
+logging = detail.logging.Logging(
+    cdir, args.verbosity, args.discard, args.tail, polly_toolchain
+)
 
-if os.name == 'nt':
-  # Windows
-  detail.call.call(['where', 'cmake'], logging)
+if args.cmake:
+  cmake_bin = args.cmake
 else:
-  detail.call.call(['which', 'cmake'], logging)
-detail.call.call(['cmake', '--version'], logging)
+  cmake_bin = 'cmake'
+
+if os.path.isabs(cmake_bin):
+  if not os.path.exists(cmake_bin):
+    sys.exit("CMake binary not found: {}".format(cmake_bin))
+else:
+  if os.name == 'nt':
+    # Windows
+    detail.call.call(['where', cmake_bin], logging)
+  else:
+    detail.call.call(['which', cmake_bin], logging)
+detail.call.call([cmake_bin, '--version'], logging)
 
 home = '.'
 if args.home:
   home = args.home
 
 generate_command = [
-    'cmake',
+    cmake_bin,
     '-H{}'.format(home),
     build_dir_option
 ]
@@ -350,7 +393,7 @@ detail.generate_command.run(
 timer.stop()
 
 build_command = [
-    'cmake',
+    cmake_bin,
     '--build',
     build_dir
 ]
@@ -406,7 +449,8 @@ if not args.nobuild:
         args.framework_device,
         logging,
         args.plist,
-        args.identity
+        args.identity,
+        args.framework_lib
     )
     timer.stop()
 
@@ -414,11 +458,31 @@ if not args.nobuild:
   os.chdir(build_dir)
   if args.test or args.test_xml:
     timer.start('Test')
-    detail.test_command.run(build_dir, args.config, logging, args.test_xml, args.verbosity == 'full', args.timeout)
+
+    if args.ctest:
+      ctest_bin = args.ctest
+    else:
+      ctest_bin = 'ctest'
+
+    if os.path.isabs(ctest_bin):
+      if not os.path.exists(ctest_bin):
+        sys.exit("Ctest binary not found: {}".format(ctest_bin))
+
+    detail.test_command.run(build_dir, args.config, logging, args.test_xml, args.verbosity == 'full', args.timeout, ctest_bin)
     timer.stop()
   if args.pack:
     timer.start('Pack')
-    detail.pack_command.run(args.config, logging, cpack_generator)
+
+    if args.cpack:
+      cpack_bin = args.cpack
+    else:
+      cpack_bin = 'cpack'
+
+    if os.path.isabs(cpack_bin):
+      if not os.path.exists(cpack_bin):
+        sys.exit("CPack binary not found: {}".format(cpack_bin))
+
+    detail.pack_command.run(args.config, logging, cpack_generator, cpack_bin, cmake_bin)
     timer.stop()
 
 if args.open:
