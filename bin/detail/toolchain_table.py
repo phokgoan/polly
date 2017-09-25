@@ -115,7 +115,14 @@ toolchain_table = [
     Toolchain('android-ndk-r14-api-19-armeabi-v7a-neon-hid-sections-lto', 'Unix Makefiles'),
     Toolchain('android-ndk-r14-api-21-arm64-v8a-clang-hid-sections-lto', 'Unix Makefiles'),
     Toolchain('android-ndk-r14-api-21-x86-64', 'Unix Makefiles'),
+    Toolchain('android-ndk-r14b-api-21-armeabi-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r14b-api-21-armeabi-v7a-neon-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r14b-api-21-mips-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r14b-api-21-x86-clang-libcxx', 'Unix Makefiles'),
     Toolchain('android-ndk-r15c-api-21-armeabi-v7a-neon-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r15c-api-21-armeabi-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r15c-api-21-mips-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r15c-api-21-x86-clang-libcxx', 'Unix Makefiles'),
     Toolchain('emscripten-cxx11', 'Unix Makefiles'),
     Toolchain('raspberrypi2-cxx11', 'Unix Makefiles'),
     Toolchain('raspberrypi2-cxx11-pic', 'Unix Makefiles'),
@@ -428,6 +435,7 @@ if os.name == 'posix':
       Toolchain('libcxx-fpic-hid-sections', 'Unix Makefiles'),
       Toolchain('libcxx-hid-sections', 'Unix Makefiles'),
       Toolchain('sanitize-address', 'Unix Makefiles'),
+      Toolchain('arm-openwrt-linux-muslgnueabi', 'Unix Makefiles'),
   ]
 
 def get_by_name(name):
