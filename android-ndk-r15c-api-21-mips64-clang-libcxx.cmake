@@ -1,11 +1,12 @@
 # Copyright (c) 2015, Ruslan Baratov
+# Copyright (c) 2015, Michele Caini
 # Copyright (c) 2017, Phokgoan Chioh
 # All rights reserved.
 
-if(DEFINED POLLY_ANDROID_NDK_R15C_API_21_X86_CLANG_LIBCXX_CMAKE_)
+if(DEFINED POLLY_ANDROID_NDK_R15C_API_21_MIPS64_CLANG_LIBCXX_CMAKE_)
   return()
 else()
-  set(POLLY_ANDROID_NDK_R15C_API_21_X86_CLANG_LIBCXX_CMAKE_ 1)
+  set(POLLY_ANDROID_NDK_R15C_API_21_MIPS64_CLANG_LIBCXX_CMAKE_ 1)
 endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/utilities/polly_clear_environment_variables.cmake")
@@ -17,8 +18,7 @@ add_definitions("-D__ANDROID_API__=21")
 
 set(ANDROID_NDK_VERSION "r15c")
 set(CMAKE_SYSTEM_VERSION "21")
-set(CMAKE_ANDROID_ARCH_ABI "x86")
-set(CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION "clang")
+set(CMAKE_ANDROID_ARCH_ABI "mips64")
 set(CMAKE_ANDROID_STL_TYPE "c++_static") # LLVM libc++ static
 
 polly_init(

@@ -1,6 +1,7 @@
 # Copyright (c) 2015-2017, Ruslan Baratov
 # Copyright (c) 2015, David Hirvonen
 # Copyright (c) 2015, Alexandre Pretyman
+# Copyright (c) 2017, Phokgoan Chioh
 # All rights reserved.
 
 if(DEFINED POLLY_ANDROID_NDK_R15C_API_21_ARMEABI_CLANG_LIBCXX_CMAKE_)
@@ -12,6 +13,9 @@ endif()
 include("${CMAKE_CURRENT_LIST_DIR}/utilities/polly_clear_environment_variables.cmake")
 
 include("${CMAKE_CURRENT_LIST_DIR}/utilities/polly_init.cmake")
+
+add_definitions("-D__ANDROID__")
+add_definitions("-D__ANDROID_API__=21")
 
 set(ANDROID_NDK_VERSION "r15c")
 set(CMAKE_SYSTEM_VERSION "21")
