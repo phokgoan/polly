@@ -146,23 +146,26 @@ def get_android_url():
       return 'https://github.com/hunter-packages/android-ndk/releases/download/v1.0.1/android-ndk-r15c-arm-linux-androideabi-4.9-llvm-libc.-android-21-arch-arm-Linux.tar.gz', '952403abedc3960b6d6eee35aeed940d935baaea'
     if platform.system() == 'Darwin':
       return 'https://github.com/hunter-packages/android-ndk/releases/download/v1.0.1/android-ndk-r15c-arm-linux-androideabi-4.9-llvm-libc.-android-21-arch-arm-Darwin.tar.gz', '978ef8b724dc3691a128d8f48a8440172478d82b'
+  if toolchain == 'android-ndk-r16b-api-24-armeabi-v7a-neon-clang-libcxx':
+    if platform.system() == 'Linux':
+      return 'https://github.com/hunter-packages/android-ndk/releases/download/v1.0.1/android-ndk-r16b-arm-linux-androideabi-4.9-llvm-libc.-android-24-arch-arm-Linux.tar.gz', 'b9ee32e31376fd5fe090172169f14faf50af6b68'
   return get_android_full_version_url()
 
 def get_cmake_url():
   if platform.system() == 'Darwin':
     return (
-        'https://github.com/ruslo/CMake/releases/download/v3.9.4/cmake-3.9.4-Darwin-x86_64.tar.gz',
-        'acbf96c8d96c7bf5c10615fe68ceb3a8d5584d33'
+        'https://github.com/ruslo/CMake/releases/download/v3.10.1/cmake-3.10.1-Darwin-x86_64.tar.gz',
+        'eca6744cb7c835c54ab9465a8a550af6e7c9c9a4'
     )
   elif platform.system() == 'Linux':
     return (
-        'https://github.com/ruslo/CMake/releases/download/v3.9.4/cmake-3.9.4-Linux-x86_64.tar.gz',
-        'eac237de5ae41f25e9fa537021e22bd38be606d2'
+        'https://github.com/ruslo/CMake/releases/download/v3.10.1/cmake-3.10.1-Linux-x86_64.tar.gz',
+        'e5b693b84b9a6e1c6a97376342ee1fcd585e4f74'
     )
   elif platform.system() == 'Windows':
     return (
-        'https://github.com/ruslo/CMake/releases/download/v3.9.4/cmake-3.9.4-win64-x64.zip',
-        'f08a1cac49a11017ffa39cf7cb45cdbd612d331f'
+        'https://github.com/ruslo/CMake/releases/download/v3.10.1/cmake-3.10.1-win64-x64.zip',
+        '310bf184951f4bb3f78d0d89e1d9990a1d335b83'
     )
   else:
     sys.exit('Unknown system: {}'.format(platform.system()))

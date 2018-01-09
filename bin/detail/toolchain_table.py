@@ -1,5 +1,7 @@
 # Copyright (c) 2014, Ruslan Baratov & Luca Martini
 # Copyright (c) 2014, Michele Caini
+# Copyright (c) 2017, Robert Nitsch
+# Copyright (c) 2018, David Hirvonen
 # All rights reserved.
 
 import os
@@ -123,12 +125,21 @@ toolchain_table = [
     Toolchain('android-ndk-r15c-api-16-armeabi-clang-libcxx', 'Unix Makefiles'),
     Toolchain('android-ndk-r15c-api-16-mips-clang-libcxx', 'Unix Makefiles'),
     Toolchain('android-ndk-r15c-api-16-x86-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r15c-api-21-arm64-v8a-neon-clang-libcxx', 'Unix Makefiles'),
     Toolchain('android-ndk-r15c-api-21-armeabi-v7a-neon-clang-libcxx', 'Unix Makefiles'),
     Toolchain('android-ndk-r15c-api-21-armeabi-clang-libcxx', 'Unix Makefiles'),
     Toolchain('android-ndk-r15c-api-21-mips-clang-libcxx', 'Unix Makefiles'),
     Toolchain('android-ndk-r15c-api-21-x86-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r15c-api-24-armeabi-v7a-neon-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r16b-api-21-armeabi-clang-libcxx', 'Unix Makefiles'),    
+    Toolchain('android-ndk-r16b-api-21-arm64-v8a-neon-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r16b-api-21-armeabi-v7a-neon-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r16b-api-21-x86-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r16b-api-21-x86-64-clang-libcxx', 'Unix Makefiles'),
+    Toolchain('android-ndk-r16b-api-24-armeabi-v7a-neon-clang-libcxx', 'Unix Makefiles'),
     Toolchain('emscripten-cxx11', 'Unix Makefiles'),
     Toolchain('raspberrypi1-cxx11-pic', 'Unix Makefiles'),
+    Toolchain('raspberrypi1-cxx11-pic-static-std', 'Unix Makefiles'),
     Toolchain('raspberrypi2-cxx11', 'Unix Makefiles'),
     Toolchain('raspberrypi2-cxx11-pic', 'Unix Makefiles'),
     Toolchain('raspberrypi3-gcc-pic-hid-sections', 'Unix Makefiles'),
@@ -181,6 +192,9 @@ if os.name == 'nt':
       ),
       Toolchain(
           'vs-15-2017', 'Visual Studio 15 2017', arch='x86', vs_version='15'
+      ),
+      Toolchain(
+          'vs-15-2017-cxx17', 'Visual Studio 15 2017', arch='x86', vs_version='15'
       ),
       Toolchain(
           'vs-14-2015-sdk-8-1', 'Visual Studio 14 2015', arch='x86', vs_version='14'
@@ -244,6 +258,12 @@ if os.name == 'nt':
           vs_version='15'
       ),
       Toolchain(
+          'vs-15-2017-win64-cxx17',
+          'Visual Studio 15 2017 Win64',
+          arch='amd64',
+          vs_version='15'
+      ),
+      Toolchain(
           'android-vc-ndk-r10e-api-19-arm-clang-3-6',
           'Visual Studio 14 2015 ARM',
           arch='',
@@ -291,6 +311,9 @@ if platform.system() == 'Linux':
 if platform.system() == 'Darwin':
   toolchain_table += [
       Toolchain('ios', 'Xcode'),
+      Toolchain('ios-11-2-dep-9-0-device-bitcode-cxx11', 'Xcode', ios_version='11.2'),
+      Toolchain('ios-11-1-dep-9-0-bitcode-cxx11', 'Xcode', ios_version='11.1'),
+      Toolchain('ios-11-1-dep-9-0-device-bitcode-cxx11', 'Xcode', ios_version='11.1'),
       Toolchain('ios-11-0-dep-9-0-bitcode-cxx11', 'Xcode', ios_version='11.0'),
       Toolchain('ios-11-0-dep-9-0-device-bitcode-cxx11', 'Xcode', ios_version='11.0'),
       Toolchain('ios-11-0', 'Xcode', ios_version='11.0'),
@@ -387,10 +410,18 @@ if platform.system() == 'Darwin':
       Toolchain('ios-nocodesign-10-1-dep-9-0-device-libcxx-hid-sections-lto', 'Xcode', ios_version='10.1', nocodesign=True),
       Toolchain('ios-nocodesign-10-2', 'Xcode', ios_version='10.2', nocodesign=True),
       Toolchain('ios-nocodesign-10-3', 'Xcode', ios_version='10.3', nocodesign=True),
+      Toolchain('ios-nocodesign-10-3-arm64-dep-9-0-device-libcxx-hid-sections', 'Xcode', ios_version='10.3', nocodesign=True),
       Toolchain('ios-nocodesign-10-3-dep-9-0-bitcode', 'Xcode', ios_version='10.3', nocodesign=True),
+      Toolchain('ios-nocodesign-10-3-wo-armv7s', 'Xcode', ios_version='10.3', nocodesign=True),
       Toolchain('ios-nocodesign-11-0', 'Xcode', ios_version='11.0', nocodesign=True),
       Toolchain('ios-nocodesign-11-0-dep-9-0-bitcode-cxx11', 'Xcode', ios_version='11.0', nocodesign=True),
       Toolchain('ios-nocodesign-11-0-arm64-dep-9-0-device-libcxx-hid-sections', 'Xcode', ios_version='11.0', nocodesign=True),
+      Toolchain('ios-nocodesign-11-1', 'Xcode', ios_version='11.1', nocodesign=True),
+      Toolchain('ios-nocodesign-11-1-dep-9-0-wo-armv7s-bitcode-cxx11', 'Xcode', ios_version='11.1', nocodesign=True),
+      Toolchain('ios-nocodesign-11-1-dep-9-0-bitcode-cxx11', 'Xcode', ios_version='11.1', nocodesign=True),
+      Toolchain('ios-nocodesign-11-2-dep-8-0-wo-armv7s-bitcode-cxx11', 'Xcode', ios_version='11.2', nocodesign=True),
+      Toolchain('ios-nocodesign-11-2-dep-9-0-bitcode-cxx11', 'Xcode', ios_version='11.2', nocodesign=True),
+      Toolchain('ios-nocodesign-11-2', 'Xcode', ios_version='11.2', nocodesign=True),
       Toolchain('xcode', 'Xcode'),
       Toolchain('xcode-cxx98', 'Xcode'),
       Toolchain('xcode-nocxx', 'Xcode'),
@@ -406,6 +437,7 @@ if platform.system() == 'Darwin':
       Toolchain('osx-10-11-hid-sections-lto', 'Xcode', osx_version='10.11'),
       Toolchain('osx-10-11-lto', 'Xcode', osx_version='10.11'),
       Toolchain('osx-10-12', 'Xcode', osx_version='10.12'),
+      Toolchain('osx-10-12-hid-sections', 'Xcode', osx_version='10.12'),
       Toolchain('osx-10-12-lto', 'Xcode', osx_version='10.12'),
       Toolchain('osx-10-12-cxx98', 'Xcode', osx_version='10.12'),
       Toolchain('osx-10-10-dep-10-7', 'Xcode', osx_version='10.10'),
@@ -425,6 +457,7 @@ if platform.system() == 'Darwin':
 if os.name == 'posix':
   toolchain_table += [
       Toolchain('analyze', 'Unix Makefiles'),
+      Toolchain('clang-5', 'Unix Makefiles'),
       Toolchain('clang-lto', 'Unix Makefiles'),
       Toolchain('clang-libstdcxx', 'Unix Makefiles'),
       Toolchain('clang-omp', 'Unix Makefiles'),
@@ -448,6 +481,7 @@ if os.name == 'posix':
       Toolchain('gcc-pic-hid-sections-lto', 'Unix Makefiles'),
       Toolchain('gcc-5-pic-hid-sections-lto', 'Unix Makefiles'),
       Toolchain('gcc-5', 'Unix Makefiles'),
+      Toolchain('gcc-7', 'Unix Makefiles'),
       Toolchain('gcc-cxx98', 'Unix Makefiles'),
       Toolchain('gcc-lto', 'Unix Makefiles'),
       Toolchain('libcxx', 'Unix Makefiles'),
@@ -458,6 +492,7 @@ if os.name == 'posix':
       Toolchain('libcxx-hid-sections', 'Unix Makefiles'),
       Toolchain('sanitize-address', 'Unix Makefiles'),
       Toolchain('arm-openwrt-linux-muslgnueabi', 'Unix Makefiles'),
+      Toolchain('openbsd-egcc-cxx11-static-std', 'Unix Makefiles'),
   ]
 
 def get_by_name(name):
